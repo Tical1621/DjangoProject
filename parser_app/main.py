@@ -3,7 +3,6 @@ from auth_data import token
 from db import insert_group
 
 
-
 def get_groups(group_id):
     url = f"https://api.vk.com/method/groups.getById?group_id={group_id}&fields=name,members_count&access_token={token}&v" \
           f"=5.131"
@@ -17,7 +16,7 @@ def get_groups(group_id):
 
 
 def main():
-    group_id = input("id: ")
+    group_id = input("id: ") #Это тут для локал теста
     get_groups(group_id)
 
 

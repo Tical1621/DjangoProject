@@ -7,7 +7,7 @@ def insert_group(group_id, group_name, members_count):
     sql = """INSERT INTO public.groups VALUES (%s,%s,%s);"""
     conn = None
     try:
-        params = Config['DATABASES']
+        params = Config['DATABASES'] # вот тут видимо не образуется коннект,разобраться с этим в 1 очередь
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
         print(f"sql {sql}")
