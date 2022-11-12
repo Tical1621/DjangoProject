@@ -1,8 +1,6 @@
-
-
 from pathlib import Path
-
-from django import middleware
+import os
+from os import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,8 +14,7 @@ SECRET_KEY = 'django-insecure-tspcj_9aym3#=1i5rw8gb$g=w^qm%+6&cbx!o7@6gl(7z=@jy^
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -30,12 +27,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
     'parser_app.apps.ParserAppConfig',
 ]
 CORS_ORIGIN_ALLOW_ALL = True
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -127,4 +122,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_BROKER_URL = f'redis://localhost:6379//'
 
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {
+    'refresh_groups-30-seconds': {
+        'task': 'parser_app.tasks.refresh_groups',
+        'schedule': 30.0,
+    },
+}

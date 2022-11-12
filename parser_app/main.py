@@ -1,5 +1,5 @@
 import requests
-from auth_data import token
+from parser_app.auth_data import token
 
 
 def get_groups_from_vk_api(group_id):
