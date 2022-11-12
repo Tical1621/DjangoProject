@@ -1,9 +1,14 @@
 from pathlib import Path
 import os
-from os import environ
+import environ
+
+env = environ.Env()
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -15,7 +20,6 @@ SECRET_KEY = 'django-insecure-tspcj_9aym3#=1i5rw8gb$g=w^qm%+6&cbx!o7@6gl(7z=@jy^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-
 
 # Application definition
 
@@ -61,24 +65,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DjangoApi.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mytestdb',
-        'USER': 'postgres',
-        'PASSWORD': '0000',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['DB_USER'],
+        'PASSWORD': os.environ['DB_PASSWORD'],
+        'HOST': os.environ['DB_HOST'],
+        'PORT': os.environ['DB_PORT'],
+    }
+}
+custom_db_host = os.environ.get('DB_HOST', None)
+if custom_db_host:
+    DATABASES['default']['HOST'] = custom_db_host
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': os.environ['REDIS_LOCATION'],
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
+custom_redis_host = os.environ.get('REDIS_HOST', None)
+if custom_redis_host:
+    CACHES['default']['LOCATION'] = custom_redis_host
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -95,10 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -107,24 +116,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery
 
-CELERY_BROKER_URL = f'redis://localhost:6379//'
+CELERY_BROKER_URL = os.environ['CELERY_BROKER_URL']
 
 CELERY_BEAT_SCHEDULE = {
     'refresh_groups-30-seconds': {
         'task': 'parser_app.tasks.refresh_groups',
-        'schedule': 30.0,
+        'schedule': os.environ['CELERY_SCHEDULER_TIMER'],
     },
 }

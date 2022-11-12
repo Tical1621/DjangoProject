@@ -1,8 +1,9 @@
 # TODO: Specify deps necessary
 celery>5
-daphne>4
+daphne==4.0.0
 Django>4.1
 gunicorn>20
 psycopg2>2.9
-
-
+environ~=1.0
+requests~=2.28.1
+djangorestframework~=3.14.0
