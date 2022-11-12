@@ -1,14 +1,12 @@
 from rest_framework import serializers
-from parser_app.models import GetGroupsRequest, GetGroupsResponse
+from parser_app.models import GroupsModel
 
 
-class GroupsRequestSerializer(serializers.ModelSerializer):
+class GroupsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = GetGroupsRequest
-        fields = 'group_id'
+        id = serializers.IntegerField(primary_key=True)
+        title = serializers.CharField(max_length=500)
+        members_count = serializers.IntegerField()
 
 
-class GroupsResponseSerilizer(serializers.ModelSerializer):
-    class Meta:
-        model = GetGroupsResponse
-        fields = ('group_id', 'title', 'members_count')
+
