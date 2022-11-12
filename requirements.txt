@@ -1,0 +1,6 @@
+# TODO: Specify deps necessary
+celery>5
+daphne>4
+Django>4.1
+gunicorn>20
+psycopg2>2.9

@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  rest-api:
+    image: tical1621-local/legacy-web-app
+
+    build:
+      context: .
+
+    ports:
+      - '8100:8000'
+
+# TODO: Configure DB & Redis connections via env
+#    environment:
+
+  celery-beat:
+    image: tical1621-local/legacy-web-app
+
+    command: ["celery", "beat", "-A", "DjangoApi", "-l", "info"]
+
+# TODO: Configure Redis connection via env
+#    environment:
+
+  celery-worker:
+    image: tical1621-local/legacy-web-app
+
+    command: ["celery", "worker", "-A", "DjangoApi", "-l", "info"]
+
+# TODO: Configure DB & Redis connections via env
+#    environment:
+
+  postgresql:
+    image: postgres:14-alpine
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+    environment:
+      POSTGRES_PASSWORD: "Passw0rd!"
+
+  redis:
+    image: redis:6.2-alpine
+
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres-data:
