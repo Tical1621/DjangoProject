@@ -1,7 +1,10 @@
-FROM python:3.10-alpine
+FROM python:3.10
 
 ENV DEBUG=False \
     PYTHONPATH=/app
+
+RUN apt-get update && apt-get install -y && rm -rf /var/lib/apt/lists/*
+
 
 COPY ./requirements.txt app/
 

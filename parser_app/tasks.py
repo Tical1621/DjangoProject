@@ -15,9 +15,9 @@ def refresh_groups():
     offset = 0
     while offset < groups_count:
         current_page = groups_qs_to_paginate[offset:offset + page_size]
-        for group in current_page.iterator():
-            group_json = get_groups_from_vk_api(group.__getattribute__('id'))
-            grp = GroupsModel(pk=group_json['id'], name=group_json['name'], members_count=group_json['members_count'])
+        group_json = get_groups_from_vk_api(current_page.values_list('pk', flat=True))  #flat=true return array of ids
+        for group in group_json:
+            grp = GroupsModel(pk=group['id'], name=group['name'], members_count=group['members_count'])
             grp.save()
-            print('succesfully updated data to id:', group.__getattribute__('id'))
+            print('succesfully updated data to id:', grp.pk)
         offset += page_size

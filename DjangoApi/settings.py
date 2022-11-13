@@ -1,15 +1,9 @@
-from pathlib import Path
 import os
-import environ
-
-env = environ.Env()
-
-
+from pathlib import Path
+from os import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -71,11 +65,11 @@ WSGI_APPLICATION = 'DjangoApi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASSWORD'],
-        'HOST': os.environ['DB_HOST'],
-        'PORT': os.environ['DB_PORT'],
+        'NAME': 'mytestdb',
+        'USER': 'postgres',
+        'PASSWORD': '0000',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 custom_db_host = os.environ.get('DB_HOST', None)
@@ -85,7 +79,7 @@ if custom_db_host:
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': os.environ['REDIS_LOCATION'],
+        'LOCATION': 'redis://localhost:6379/',
     }
 }
 
@@ -120,13 +114,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Celery
-
-CELERY_BROKER_URL = os.environ['CELERY_BROKER_URL']
+# celery
+CELERY_BROKER_URL = 'redis://localhost:6379//'
+if custom_redis_host:
+    CELERY_BROKER_URL = custom_redis_host
 
 CELERY_BEAT_SCHEDULE = {
     'refresh_groups-30-seconds': {
         'task': 'parser_app.tasks.refresh_groups',
-        'schedule': os.environ['CELERY_SCHEDULER_TIMER'],
+        'schedule': 30.0,
     },
 }
