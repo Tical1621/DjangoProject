@@ -2,7 +2,7 @@ version: '3'
 
 services:
   rest-api:
-    image: tical1621-local/legacy-web-app
+    image: tical1621-local/rest-api
 
     build:
       context: .
@@ -16,7 +16,7 @@ services:
       REDIS_HOST: "redis://redis:6379"  # Same for Redis
 
   celery-beat:
-    image: tical1621-local/legacy-web-app
+    image: tical1621-local/celery-beat
 
     command: ["celery", "beat", "-A", "DjangoApi", "-l", "info"]
 
@@ -25,7 +25,7 @@ services:
       REDIS_HOST: "redis://redis:6379"
 
   celery-worker:
-    image: tical1621-local/legacy-web-app
+    image: tical1621-local/celery-worker
 
     command: ["celery", "worker", "-A", "DjangoApi", "-l", "info"]
 
