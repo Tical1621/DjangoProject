@@ -13,11 +13,12 @@ SECRET_KEY = 'django-insecure-tspcj_9aym3#=1i5rw8gb$g=w^qm%+6&cbx!o7@6gl(7z=@jy^
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -56,8 +57,9 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'DjangoApi.wsgi.application'
+#
+# WSGI_APPLICATION = 'DjangoApi.wsgi.application'
+ASGI_APPLICATION = 'Django.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

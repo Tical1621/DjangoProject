@@ -8,7 +8,6 @@ def get_groups_from_vk_api(groups_ids):
           f"=5.131"
     req = requests.get(url)
     src = req.json()
-    print(src)
     return src["response"]
 
 

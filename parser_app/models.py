@@ -6,11 +6,8 @@ class GroupsModel(models.Model):
     name = models.CharField(max_length=500)
     members_count = models.IntegerField()
 
-    # def __str__(self):
-    #     return self.id
     def __getitem__(self, item):
         return self, item
 
     class Meta:
         db_table = 'groups'
-

@@ -10,28 +10,26 @@ services:
     ports:
       - '8100:8000'
 
-# TODO: Configure DB & Redis connections via env
     environment:
-      DB_HOST: "postgresql"  # PostgreSQL container will be accessible on network via name of the service
-      REDIS_HOST: "redis://redis:6379"  # Same for Redis
+      DB_HOST: "postgresql"
+      REDIS_HOST: "redis://redis:6379"
 
   celery-beat:
-    image: tical1621-local/celery-beat
+    image: tical1621-local/rest-api
 
-    command: ["celery", "beat", "-A", "DjangoApi", "-l", "info"]
+    command: ["celery", "-A", "DjangoApi", "beat", "-l", "info"]
 
-# TODO: Configure Redis connection via env
     environment:
       REDIS_HOST: "redis://redis:6379"
 
   celery-worker:
-    image: tical1621-local/celery-worker
+    image: tical1621-local/rest-api
 
-    command: ["celery", "worker", "-A", "DjangoApi", "-l", "info"]
+    command: ["celery", "-A", "DjangoApi", "worker", "-l", "info"]
 
-# TODO: Configure DB & Redis connections via env
+
     environment:
-        DB_HOST: postgresql
+        DB_HOST: "postgresql"
         REDIS_HOST: "redis://redis:6379"
 
   postgresql:
@@ -45,6 +43,8 @@ services:
 
     environment:
       POSTGRES_PASSWORD: "0000"
+      POSTGRES_USERNAME: "postgres"
+      POSTGRES_DB: "mytestdb"
 
   redis:
     image: redis:6.2-alpine

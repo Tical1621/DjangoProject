@@ -3,29 +3,55 @@ from django.http.response import JsonResponse
 from parser_app.main import get_groups_from_vk_api
 from parser_app.models import GroupsModel
 from parser_app.serializers import GroupsSerializer
-from django.http import HttpResponseNotAllowed
+from django.http import HttpResponseNotAllowed, HttpResponseNotFound
 from django.core.cache import cache
 
 
 @csrf_exempt
-def get_groups(request, group_id):
+# def get_groups(request, group_id):
+#     if request.method != 'GET':
+#         return HttpResponseNotAllowed(['GET'])
+#     resp = cache.get(f'group_{group_id}')
+#     if resp:
+#         return JsonResponse(resp)
+#     try:
+#         group = GroupsModel.objects.get(pk=group_id)  # query to db object.equals(ORM.Api)
+#         groups_serializer = GroupsSerializer(group)
+#         cache.set(f'group_{group_id}', groups_serializer.data)
+#         return JsonResponse(cache.get(f'group_{group_id}'))
+#     except GroupsModel.DoesNotExist:
+#         group = None
+#     if group is None:
+#         try:
+#             group_json = get_groups_from_vk_api([group_id])[0]
+#             grp = GroupsModel(pk=group_json['id'], name=group_json['name'], members_count=group_json['members_count'])
+#             grp.save()
+#             group_serializer = GroupsSerializer(grp)
+#             cache.set(f'group_{group_id}', group_serializer.data)
+#             return JsonResponse(cache.get(f'group_{group_id}'))
+#         except (KeyError, AttributeError):
+#             return HttpResponseNotFound('group not found')
+
+async def get_groups_async(request, group_id):
     if request.method != 'GET':
         return HttpResponseNotAllowed(['GET'])
     resp = cache.get(f'group_{group_id}')
     if resp:
         return JsonResponse(resp)
     try:
-        group = GroupsModel.objects.get(pk=group_id)  #query to db object.equals(ORM.Api)
+        group = GroupsModel.objects.get(pk=group_id)  # query to db object.equals(ORM.Api)
         groups_serializer = GroupsSerializer(group)
         cache.set(f'group_{group_id}', groups_serializer.data)
         return JsonResponse(cache.get(f'group_{group_id}'))
     except GroupsModel.DoesNotExist:
         group = None
     if group is None:
-        group_json = get_groups_from_vk_api([group_id])[0]
-        grp = GroupsModel(pk=group_json['id'], name=group_json['name'], members_count=group_json['members_count'])
-        grp.save()
-        group_serializer = GroupsSerializer(grp)
-        cache.set(f'group_{group_id}', group_serializer.data)
-        return JsonResponse(cache.get(f'group_{group_id}'))
-
+        try:
+            group_json = get_groups_from_vk_api([group_id])[0]
+            grp = GroupsModel(pk=group_json['id'], name=group_json['name'], members_count=group_json['members_count'])
+            grp.save()
+            group_serializer = GroupsSerializer(grp)
+            cache.set(f'group_{group_id}', group_serializer.data)
+            return JsonResponse(cache.get(f'group_{group_id}'))
+        except (KeyError, AttributeError):
+            return HttpResponseNotFound('group not found')
