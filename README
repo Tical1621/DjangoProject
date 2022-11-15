@@ -1,0 +1,14 @@
+Локально проект запускается так:
+python manage.py runserver
+Стартовый билд для докера:
+docker-compose up --build -d
+для миграций:
+docker-compose run --rm rest-api python manage.py migrate
+
+локальный запуск селери:
+celery -A DjangoApi worker --beat -l INFO
+
+
+
+
+

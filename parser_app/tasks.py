@@ -7,17 +7,17 @@ logger = get_task_logger(__name__)
 
 
 @shared_task
-def refresh_groups():
+def refresh_groups():  #@Scheduled
     groups_qs = GroupsModel.objects.all()
     groups_count = groups_qs.count()
     groups_qs_to_paginate = groups_qs.order_by('id')
     page_size = 500
     offset = 0
     while offset < groups_count:
-        current_page = groups_qs_to_paginate[offset:offset + page_size]
+        current_page = groups_qs_to_paginate[offset:offset + page_size]  #прикольный слайсинг
         group_json = get_groups_from_vk_api(current_page.values_list('pk', flat=True))  #flat=true return array of ids
         for group in group_json:
             grp = GroupsModel(pk=group['id'], name=group['name'], members_count=group['members_count'])
             grp.save()
-            print('succesfully updated data to id:', grp.pk)
+            print('successfully updated data to id:', grp.pk)
         offset += page_size

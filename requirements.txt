@@ -8,3 +8,4 @@ redis~=4.3
 environ~=1.0
 requests~=2.28.1
 djangorestframework~=3.14.0
+asgiref~=3.5.2

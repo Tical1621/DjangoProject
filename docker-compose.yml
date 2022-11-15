@@ -14,6 +14,9 @@ services:
       DB_HOST: "postgresql"
       REDIS_HOST: "redis://redis:6379"
 
+    command: ["daphne", "-b", "0.0.0.0", "-p", "8000", "--access-log", "-", "DjangoApi.asgi:application"]
+
+
   celery-beat:
     image: tical1621-local/rest-api
 
@@ -34,7 +37,6 @@ services:
 
   postgresql:
     image: postgres:14-alpine
-
     ports:
       - "5432:5432"
 
